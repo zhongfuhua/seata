@@ -18,7 +18,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>io.seata</groupId>
+        <groupId>com.gigrt.midend</groupId>
         <artifactId>seata-parent</artifactId>
         <version>${revision}</version>
     </parent>
@@ -169,7 +169,7 @@
                     </programs>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>1.7.0</version>
@@ -208,14 +208,14 @@
                             <jvmFlag>-XX:-UseAdaptiveSizePolicy</jvmFlag>
                             <jvmFlag>-XX:+HeapDumpOnOutOfMemoryError</jvmFlag>
                             <jvmFlag>-XX:HeapDumpPath=/var/log/seata_heapdump.hprof</jvmFlag>
-                            <!--gc-->
+                            &lt;!&ndash;gc&ndash;&gt;
                             <jvmFlag>-XX:+DisableExplicitGC</jvmFlag>
                             <jvmFlag>-XX:+CMSParallelRemarkEnabled</jvmFlag>
                             <jvmFlag>-XX:+UseCMSInitiatingOccupancyOnly</jvmFlag>
                             <jvmFlag>-XX:CMSInitiatingOccupancyFraction=75</jvmFlag>
                             <jvmFlag>-Xloggc:/var/log/seata_gc.log</jvmFlag>
                             <jvmFlag>-verbose:gc</jvmFlag>
-                            <!--netty-->
+                            &lt;!&ndash;netty&ndash;&gt;
                             <jvmFlag>-Dio.netty.leakDetectionLevel=advanced</jvmFlag>
                         </jvmFlags>
                         <labels>
@@ -233,7 +233,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 

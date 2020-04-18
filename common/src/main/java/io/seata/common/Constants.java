@@ -84,20 +84,44 @@ public class Constants {
     public final static String TCC_METHOD_RESULT = "result";
 
     /**
+     * The constant SAGA_METHOD_RESULT.
+     */
+    public final static String  SAGA_METHOD_RESULT           = "result";
+    
+    /**
      * The constant TCC_METHOD_ARGUMENTS.
      */
     public final static String TCC_METHOD_ARGUMENTS = "arguments";
 
+    /**
+     * The constant SAGA_METHOD_ARGUMENTS.
+     */
+    public final static String  SAGA_METHOD_ARGUMENTS        = "arguments";
+    
+    public final static String  SAGA_DACC_METHOD_PARAMS      = "daccParams";
+    
+    public final static String  SAGA_DACC_METHOD_BUSINESS_ID = "daccBusinessId";
+    
     /**
      * transaction context
      */
     public final static String TCC_ACTIVITY_CONTEXT = "activityContext";
 
     /**
+     * transaction context
+     */
+    public final static String  SAGA_ACTIVITY_CONTEXT        = "activityContext";
+    
+    /**
      * branch context
      */
     public final static String TCC_ACTION_CONTEXT = "actionContext";
 
+    /**
+     * branch context
+     */
+    public final static String  SAGA_ACTION_CONTEXT          = "actionContext";
+    
     /**
      * default charset name
      */

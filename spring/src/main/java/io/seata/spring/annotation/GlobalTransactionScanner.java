@@ -15,25 +15,31 @@
  */
 package io.seata.spring.annotation;
 
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-
 import io.seata.common.util.CollectionUtils;
 import io.seata.common.util.StringUtils;
 import io.seata.config.ConfigurationChangeListener;
 import io.seata.config.ConfigurationFactory;
 import io.seata.core.constants.ConfigurationKeys;
+import io.seata.core.model.BranchType;
 import io.seata.core.rpc.netty.RmRpcClient;
 import io.seata.core.rpc.netty.ShutdownHook;
 import io.seata.core.rpc.netty.TmRpcClient;
+import io.seata.rm.DefaultResourceManager;
 import io.seata.rm.RMClient;
+import io.seata.rm.saga.SAGAResourceManager;
+import io.seata.spring.saga.SagaActionInterceptor;
+import io.seata.spring.saga.SeataDubboGenericInvoker;
+import io.seata.spring.saga.SeataHSFGenericInvoker;
 import io.seata.spring.tcc.TccActionInterceptor;
+import io.seata.spring.util.SAGABeanParserUtils;
 import io.seata.spring.util.SpringProxyUtils;
 import io.seata.spring.util.TCCBeanParserUtils;
 import io.seata.tm.TMClient;
 import io.seata.tm.api.DefaultFailureHandlerImpl;
 import io.seata.tm.api.FailureHandler;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +65,9 @@ import static io.seata.core.constants.DefaultValues.DEFAULT_DISABLE_GLOBAL_TRANS
 public class GlobalTransactionScanner extends AbstractAutoProxyCreator
     implements InitializingBean, ApplicationContextAware,
     DisposableBean {
+    private String             applicationName;
+
+    private String             referenceAddress;
 
     /**
      *
@@ -87,6 +96,8 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
     private final FailureHandler failureHandlerHook;
 
     private ApplicationContext applicationContext;
+
+    private final boolean hsfInvoker;
 
     /**
      * Instantiates a new Global transaction scanner.
@@ -125,7 +136,18 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
      * @param mode           the mode
      */
     public GlobalTransactionScanner(String applicationId, String txServiceGroup, int mode) {
-        this(applicationId, txServiceGroup, mode, DEFAULT_FAIL_HANDLER);
+        this(applicationId, txServiceGroup, mode, DEFAULT_FAIL_HANDLER, true);
+    }
+
+    /**
+     * Instantiates a new Global transaction scanner.
+     *
+     * @param applicationId  the application id
+     * @param txServiceGroup the tx service group
+     * @param hsfInvoker     the hsfInvoker
+     */
+    public GlobalTransactionScanner(String applicationId, String txServiceGroup, boolean hsfInvoker) {
+        this(applicationId, txServiceGroup, DEFAULT_MODE, DEFAULT_FAIL_HANDLER, hsfInvoker);
     }
 
     /**
@@ -136,7 +158,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
      * @param failureHandlerHook the failure handler hook
      */
     public GlobalTransactionScanner(String applicationId, String txServiceGroup, FailureHandler failureHandlerHook) {
-        this(applicationId, txServiceGroup, DEFAULT_MODE, failureHandlerHook);
+        this(applicationId, txServiceGroup, DEFAULT_MODE, failureHandlerHook, true);
     }
 
     /**
@@ -148,9 +170,10 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
      * @param failureHandlerHook the failure handler hook
      */
     public GlobalTransactionScanner(String applicationId, String txServiceGroup, int mode,
-                                    FailureHandler failureHandlerHook) {
+                                    FailureHandler failureHandlerHook, boolean hsfInvoker) {
         setOrder(ORDER_NUM);
         setProxyTargetClass(true);
+        this.hsfInvoker = hsfInvoker;
         this.applicationId = applicationId;
         this.txServiceGroup = txServiceGroup;
         this.mode = mode;
@@ -184,7 +207,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
             LOGGER.info("Global Transaction Clients are initialized. ");
         }
         registerSpringShutdownHook();
-
+        registerDubboGenricInvoker();
     }
 
     private void registerSpringShutdownHook() {
@@ -195,6 +218,18 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
         ShutdownHook.getInstance().addDisposable(TmRpcClient.getInstance(applicationId, txServiceGroup));
         ShutdownHook.getInstance().addDisposable(RmRpcClient.getInstance(applicationId, txServiceGroup));
     }
+
+
+    private void registerDubboGenricInvoker(){
+        SAGAResourceManager sagaResourceManager = (SAGAResourceManager) DefaultResourceManager.get().getResourceManager(BranchType.SAGA_ANNOTATION);
+        if(hsfInvoker){
+            sagaResourceManager.setGenericInvoker(new SeataHSFGenericInvoker());
+        }else{
+            sagaResourceManager.setGenericInvoker(new SeataDubboGenericInvoker(this.applicationName, this.referenceAddress));
+        }
+    }
+
+
 
     @Override
     protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
@@ -211,7 +246,11 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
                 if (TCCBeanParserUtils.isTccAutoProxy(bean, beanName, applicationContext)) {
                     //TCC interceptor, proxy bean of sofa:reference/dubbo:reference, and LocalTCC
                     interceptor = new TccActionInterceptor(TCCBeanParserUtils.getRemotingDesc(beanName));
-                } else {
+                //check SAGA proxy
+                } else if (SAGABeanParserUtils.isSagaAutoProxy(bean, beanName, applicationContext)) {
+                    //SAGA interceptor�� proxy bean of sofa:reference/dubbo:reference, and LocalTCC
+                    interceptor = new SagaActionInterceptor(SAGABeanParserUtils.getRemotingDesc(beanName));
+                }  else {
                     Class<?> serviceInterface = SpringProxyUtils.findTargetClass(bean);
                     Class<?>[] interfacesIfJdk = SpringProxyUtils.findInterfaces(bean);
 
@@ -293,5 +332,20 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
         this.setBeanFactory(applicationContext);
+    }
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getReferenceAddress() {
+        return referenceAddress;
+    }
+
+    public void setReferenceAddress(String referenceAddress) {
+        this.referenceAddress = referenceAddress;
     }
 }

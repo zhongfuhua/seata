@@ -51,6 +51,16 @@ public interface TransactionManager {
     GlobalStatus commit(String xid) throws TransactionException;
 
     /**
+     * Global commit.
+     *
+     * @param xid XID of the global transaction.
+     * @return Status of the global transaction after committing.
+     * @throws TransactionException Any exception that fails this will be wrapped with TransactionException and thrown
+     * out.
+     */
+    GlobalStatus branchCommit(String xid, long branchId, boolean retrying) throws TransactionException;
+
+    /**
      * Global rollback.
      *
      * @param xid XID of the global transaction

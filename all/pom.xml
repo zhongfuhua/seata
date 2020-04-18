@@ -19,9 +19,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.seata</groupId>
+    <groupId>com.gigrt.midend</groupId>
     <artifactId>seata-all</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.0-SNAPSHOT</version>
 
     <name>Seata All-in-one ${project.version}</name>
     <url>http://seata.io</url>
@@ -71,7 +71,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.seata</groupId>
+                <groupId>com.gigrt.midend</groupId>
                 <artifactId>seata-bom</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
@@ -83,219 +83,225 @@
     <dependencies>
         <!-- seata projects -->
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-custom</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-apollo</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-zk</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-consul</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-etcd3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-config-spring-cloud</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-custom</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-consul</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-eureka</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-redis</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-sofa</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-zk</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-discovery-etcd3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-dubbo</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-http</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-dubbo-alibaba</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-sofa-rpc</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-motan</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-rm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-rm-datasource</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-sqlparser-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-sqlparser-druid</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-tcc</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-tm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-serializer-seata</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-serializer-protobuf</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-grpc</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-serializer-kryo</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-serializer-hessian</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-compressor-gzip</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- saga -->
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
+            <artifactId>seata-saga-annotation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-saga-processctrl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-saga-statelang</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-saga-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-saga-rm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-saga-tm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.gigrt.midend</groupId>
             <artifactId>seata-saga-engine-store</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -605,63 +611,64 @@
                             <createDependencyReducedPom>true</createDependencyReducedPom>
                             <artifactSet>
                                 <includes>
-                                    <include>io.seata:seata-common</include>
-                                    <include>io.seata:seata-core</include>
-                                    <include>io.seata:seata-config-core</include>
-                                    <include>io.seata:seata-config-custom</include>
-                                    <include>io.seata:seata-config-apollo</include>
-                                    <include>io.seata:seata-config-nacos</include>
-                                    <include>io.seata:seata-config-zk</include>
-                                    <include>io.seata:seata-config-consul</include>
-                                    <include>io.seata:seata-config-etcd3</include>
-                                    <include>io.seata:seata-config-spring-cloud</include>
-                                    <include>io.seata:seata-discovery-core</include>
-                                    <include>io.seata:seata-discovery-custom</include>
-                                    <include>io.seata:seata-discovery-consul</include>
-                                    <include>io.seata:seata-discovery-eureka</include>
-                                    <include>io.seata:seata-discovery-nacos</include>
-                                    <include>io.seata:seata-discovery-redis</include>
-                                    <include>io.seata:seata-discovery-sofa</include>
-                                    <include>io.seata:seata-discovery-zk</include>
-                                    <include>io.seata:seata-discovery-etcd3</include>
-                                    <include>io.seata:seata-dubbo</include>
-                                    <include>io.seata:seata-dubbo-alibaba</include>
-                                    <include>io.seata:seata-motan</include>
-                                    <include>io.seata:seata-grpc</include>
-                                    <include>io.seata:seata-http</include>
-                                    <include>io.seata:seata-rm</include>
-                                    <include>io.seata:seata-rm-datasource</include>
-                                    <include>io.seata:seata-sqlparser-core</include>
-                                    <include>io.seata:seata-sqlparser-druid</include>
-                                    <include>io.seata:seata-sofa-rpc</include>
-                                    <include>io.seata:seata-spring</include>
-                                    <include>io.seata:seata-tcc</include>
-                                    <include>io.seata:seata-tm</include>
-                                    <include>io.seata:seata-serializer-seata</include>
-                                    <include>io.seata:seata-serializer-protobuf</include>
-                                    <include>io.seata:seata-serializer-kryo</include>
-                                    <include>io.seata:seata-serializer-hessian</include>
+                                    <include>com.gigrt.midend:seata-common</include>
+                                    <include>com.gigrt.midend:seata-core</include>
+                                    <include>com.gigrt.midend:seata-config-core</include>
+                                    <include>com.gigrt.midend:seata-config-custom</include>
+                                    <include>com.gigrt.midend:seata-config-apollo</include>
+                                    <include>com.gigrt.midend:seata-config-nacos</include>
+                                    <include>com.gigrt.midend:seata-config-zk</include>
+                                    <include>com.gigrt.midend:seata-config-consul</include>
+                                    <include>com.gigrt.midend:seata-config-etcd3</include>
+                                    <include>com.gigrt.midend:seata-config-spring-cloud</include>
+                                    <include>com.gigrt.midend:seata-discovery-core</include>
+                                    <include>com.gigrt.midend:seata-discovery-custom</include>
+                                    <include>com.gigrt.midend:seata-discovery-consul</include>
+                                    <include>com.gigrt.midend:seata-discovery-eureka</include>
+                                    <include>com.gigrt.midend:seata-discovery-nacos</include>
+                                    <include>com.gigrt.midend:seata-discovery-redis</include>
+                                    <include>com.gigrt.midend:seata-discovery-sofa</include>
+                                    <include>com.gigrt.midend:seata-discovery-zk</include>
+                                    <include>com.gigrt.midend:seata-discovery-etcd3</include>
+                                    <include>com.gigrt.midend:seata-dubbo</include>
+                                    <include>com.gigrt.midend:seata-dubbo-alibaba</include>
+                                    <include>com.gigrt.midend:seata-motan</include>
+                                    <include>com.gigrt.midend:seata-grpc</include>
+                                    <include>com.gigrt.midend:seata-http</include>
+                                    <include>com.gigrt.midend:seata-rm</include>
+                                    <include>com.gigrt.midend:seata-rm-datasource</include>
+                                    <include>com.gigrt.midend:seata-sqlparser-core</include>
+                                    <include>com.gigrt.midend:seata-sqlparser-druid</include>
+                                    <include>com.gigrt.midend:seata-sofa-rpc</include>
+                                    <include>com.gigrt.midend:seata-spring</include>
+                                    <include>com.gigrt.midend:seata-tcc</include>
+                                    <include>com.gigrt.midend:seata-saga-annotation</include>
+                                    <include>com.gigrt.midend:seata-tm</include>
+                                    <include>com.gigrt.midend:seata-serializer-seata</include>
+                                    <include>com.gigrt.midend:seata-serializer-protobuf</include>
+                                    <include>com.gigrt.midend:seata-serializer-kryo</include>
+                                    <include>com.gigrt.midend:seata-serializer-hessian</include>
                                     <!-- saga -->
-                                    <include>io.seata:seata-saga-processctrl</include>
-                                    <include>io.seata:seata-saga-statelang</include>
-                                    <include>io.seata:seata-saga-engine</include>
-                                    <include>io.seata:seata-saga-rm</include>
-                                    <include>io.seata:seata-saga-tm</include>
-                                    <include>io.seata:seata-saga-engine-store</include>
-                                    <include>io.seata:seata-compressor-gzip</include>
+                                    <include>com.gigrt.midend:seata-saga-processctrl</include>
+                                    <include>com.gigrt.midend:seata-saga-statelang</include>
+                                    <include>com.gigrt.midend:seata-saga-engine</include>
+                                    <include>com.gigrt.midend:seata-saga-rm</include>
+                                    <include>com.gigrt.midend:seata-saga-tm</include>
+                                    <include>com.gigrt.midend:seata-saga-engine-store</include>
+                                    <include>com.gigrt.midend:seata-compressor-gzip</include>
                                 </includes>
                             </artifactSet>
                             <transformers>
                                 <!-- META-INF/services -->
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <!-- spring相关 -->
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/spring.handlers</resource>
                                 </transformer>
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/spring.schemas</resource>
                                 </transformer>
                             </transformers>
@@ -695,7 +702,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>nexus-snapshots</id>
             <build>
                 <plugins>
                     <plugin>
@@ -713,7 +720,7 @@
                             <quiet>true</quiet>
                             <includeDependencySources>true</includeDependencySources>
                             <dependencySourceIncludes>
-                                <dependencySourceInclude>io.seata:seata-*</dependencySourceInclude>
+                                <dependencySourceInclude>com.gigrt.midend:seata-*</dependencySourceInclude>
                             </dependencySourceIncludes>
                         </configuration>
                         <executions>
@@ -757,12 +764,12 @@
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>oss_seata</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <id>nexus-snapshots</id>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>oss_seata</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>nexus-release</id>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
                 </repository>
             </distributionManagement>
         </profile>

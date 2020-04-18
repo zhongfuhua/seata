@@ -15,6 +15,7 @@
  */
 package io.seata.core.protocol.transaction;
 
+import io.seata.core.model.GlobalStatus;
 import io.seata.core.protocol.MessageType;
 
 /**
@@ -23,6 +24,29 @@ import io.seata.core.protocol.MessageType;
  * @author sharajava
  */
 public class BranchCommitResponse extends AbstractBranchEndResponse {
+
+    /**
+     * The Global status.
+     */
+    protected GlobalStatus globalStatus;
+
+    /**
+     * Gets global status.
+     *
+     * @return the global status
+     */
+    public GlobalStatus getGlobalStatus() {
+        return globalStatus;
+    }
+
+    /**
+     * Sets global status.
+     *
+     * @param globalStatus the global status
+     */
+    public void setGlobalStatus(GlobalStatus globalStatus) {
+        this.globalStatus = globalStatus;
+    }
 
     @Override
     public short getTypeCode() {

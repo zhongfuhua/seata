@@ -1,1 +1,5 @@
-io.seata.integration.dubbo.alibaba.AlibabaDubboTransactionPropagationFilter
+io.seata.integration.dubbo.alibaba.TransactionPropagationFilter
+io.seata.integration.dubbo.alibaba.TccReferenceAnnotationFilter
+io.seata.integration.dubbo.alibaba.SagaReferenceAnnotationFilter
+io.seata.integration.dubbo.alibaba.SagaReferenceDaccClientFilter
+io.seata.integration.dubbo.alibaba.SagaReferenceDaccCallBackFilter

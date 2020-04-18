@@ -15,12 +15,6 @@
  */
 package io.seata.server.coordinator;
 
-import java.time.Duration;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import io.netty.channel.Channel;
 import io.seata.common.thread.NamedThreadFactory;
 import io.seata.common.util.CollectionUtils;
@@ -35,6 +29,8 @@ import io.seata.core.protocol.AbstractMessage;
 import io.seata.core.protocol.AbstractResultMessage;
 import io.seata.core.protocol.transaction.AbstractTransactionRequestToTC;
 import io.seata.core.protocol.transaction.AbstractTransactionResponse;
+import io.seata.core.protocol.transaction.BranchDaccCommitRequest;
+import io.seata.core.protocol.transaction.BranchDaccCommitResponse;
 import io.seata.core.protocol.transaction.BranchRegisterRequest;
 import io.seata.core.protocol.transaction.BranchRegisterResponse;
 import io.seata.core.protocol.transaction.BranchReportRequest;
@@ -62,6 +58,11 @@ import io.seata.server.AbstractTCInboundHandler;
 import io.seata.server.event.EventBusManager;
 import io.seata.server.session.GlobalSession;
 import io.seata.server.session.SessionHolder;
+import java.time.Duration;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,6 +149,11 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Tran
     public DefaultCoordinator(ServerMessageSender messageSender) {
         this.messageSender = messageSender;
         this.core = new DefaultCore(messageSender);
+    }
+	
+	@Override
+    protected void doBranchCommit(BranchDaccCommitRequest request, BranchDaccCommitResponse response, RpcContext rpcContext) throws TransactionException {
+        response.setGlobalStatus(core.branchCommit(request.getXid(), request.getBranchId(), request.isRetrying()));
     }
 
     @Override

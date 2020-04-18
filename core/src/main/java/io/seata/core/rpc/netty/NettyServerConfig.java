@@ -18,6 +18,7 @@ package io.seata.core.rpc.netty;
 import io.netty.channel.ServerChannel;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.seata.config.ConfigurationFactory;
 import io.seata.core.constants.ConfigurationKeys;
 
 import static io.seata.core.constants.DefaultValues.DEFAULT_BOSS_THREAD_PREFIX;
@@ -41,7 +42,7 @@ public class NettyServerConfig extends NettyBaseConfig {
     private int writeBufferHighWaterMark = 67108864;
     private int writeBufferLowWaterMark = 1048576;
     private static final int DEFAULT_LISTEN_PORT = 8091;
-    private static final int RPC_REQUEST_TIMEOUT = 30 * 1000;
+    private static final int RPC_REQUEST_TIMEOUT = ConfigurationFactory.getInstance().getInt(ConfigurationKeys.TRANSPORT_PREFIX + "rpc-request-timeout", 30000);
     private int serverChannelMaxIdleTimeSeconds = 30;
     private static final String EPOLL_WORKER_THREAD_PREFIX = "NettyServerEPollWorker";
 

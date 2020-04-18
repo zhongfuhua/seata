@@ -121,18 +121,51 @@ public class DefaultCore implements Core {
     @Override
     public String begin(String applicationId, String transactionServiceGroup, String name, int timeout)
             throws TransactionException {
-        GlobalSession session = GlobalSession.createGlobalSession(applicationId, transactionServiceGroup, name,
+        GlobalSession session = GlobalSession
+            .createGlobalSession(applicationId, transactionServiceGroup, name,
                 timeout);
         session.addSessionLifecycleListener(SessionHolder.getRootSessionManager());
 
         session.begin();
 
         // transaction start event
-        eventBus.post(new GlobalTransactionEvent(session.getTransactionId(), GlobalTransactionEvent.ROLE_TC,
+        eventBus.post(
+            new GlobalTransactionEvent(session.getTransactionId(), GlobalTransactionEvent.ROLE_TC,
                 session.getTransactionName(), session.getBeginTime(), null, session.getStatus()));
 
         LOGGER.info("Successfully begin global transaction xid = {}", session.getXid());
         return session.getXid();
+    }
+
+    @Override
+    public GlobalStatus branchCommit(String xid, long branchId, boolean retrying) {
+        GlobalSession globalSession = SessionHolder.findGlobalSession(xid);
+        if (globalSession == null) {
+            return GlobalStatus.Committed;
+        }
+
+        BranchSession branchSession = null;
+        try {
+            branchSession = globalSession.getBranch(branchId);
+            branchSession.setStatus(BranchStatus.PhaseTwo_Committed);
+            if (!globalSession.hasCommitDoneAndCleanBranch()) {
+                LOGGER.info("Global[{}] committing is NOT done.", globalSession.getXid());
+                return globalSession.getStatus();
+            }
+
+            SessionHelper.endCommitted(globalSession);
+
+            //committed event
+            eventBus.post(new GlobalTransactionEvent(globalSession.getTransactionId(), GlobalTransactionEvent.ROLE_TC,
+                    globalSession.getTransactionName(), globalSession.getBeginTime(), System.currentTimeMillis(),
+                    globalSession.getStatus()));
+
+            LOGGER.info("Branch[{}] commit taht global[{}] committing is successfully done.", branchId, globalSession.getXid());
+
+        } catch (TransactionException e) {
+            LOGGER.error("Exception committing branch {}", branchSession, e);
+        }
+        return globalSession.getStatus();
     }
 
     @Override
@@ -179,9 +212,20 @@ public class DefaultCore implements Core {
             for (BranchSession branchSession : globalSession.getSortedBranches()) {
                 BranchStatus currentStatus = branchSession.getStatus();
                 if (currentStatus == BranchStatus.PhaseOne_Failed) {
-                    globalSession.removeBranch(branchSession);
-                    continue;
-                }
+	                globalSession.removeBranch(branchSession);
+	                continue;
+	            }
+
+	            if(branchSession.getBranchType() == BranchType.SAGA_ANNOTATION){
+	                if(globalSession.isDacc()){
+	                    if(!branchSession.getResourceId().startsWith("DACC:")){
+	                        branchSession.setStatus(BranchStatus.PhaseTwo_Committed);
+	                    }
+	                    continue;
+	                }
+	                globalSession.removeBranch(branchSession);
+	                continue;
+	            }
                 try {
                     BranchStatus branchStatus = getCore(branchSession.getBranchType()).branchCommit(globalSession, branchSession);
 
@@ -222,7 +266,7 @@ public class DefaultCore implements Core {
                     }
                 }
             }
-            if (globalSession.hasBranch()) {
+            if (globalSession.hasBranch() || !globalSession.hasCommitDoneAndCleanBranch()) {
                 LOGGER.info("Global[{}] committing is NOT done.", globalSession.getXid());
                 return false;
             }
@@ -250,7 +294,7 @@ public class DefaultCore implements Core {
         // just lock changeStatus
         boolean shouldRollBack = globalSession.lockAndExecute(() -> {
             globalSession.close(); // Highlight: Firstly, close the session, then no more branch can be registered.
-            if (globalSession.getStatus() == GlobalStatus.Begin) {
+            if (globalSession.getStatus() == GlobalStatus.Begin || globalSession.isDacc()) {
                 globalSession.changeStatus(GlobalStatus.Rollbacking);
                 return true;
             }

@@ -64,7 +64,7 @@ public class TransactionalTemplate {
                 rs = business.execute();
 
             } catch (Throwable ex) {
-
+                LOGGER.error("Transaction busineess execute exception:", ex);
                 // 3.the needed business exception to rollback.
                 completeTransactionAfterThrowing(txInfo,tx,ex);
                 throw ex;

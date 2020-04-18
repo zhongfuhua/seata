@@ -69,5 +69,6 @@ public @interface GlobalTransactional {
      */
     String[] noRollbackForClassName() default {};
 
+    boolean atSwitch() default true;
 
 }

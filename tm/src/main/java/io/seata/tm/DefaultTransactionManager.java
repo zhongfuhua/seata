@@ -15,8 +15,6 @@
  */
 package io.seata.tm;
 
-import java.util.concurrent.TimeoutException;
-
 import io.seata.core.exception.TmTransactionException;
 import io.seata.core.exception.TransactionException;
 import io.seata.core.exception.TransactionExceptionCode;
@@ -25,6 +23,8 @@ import io.seata.core.model.TransactionManager;
 import io.seata.core.protocol.ResultCode;
 import io.seata.core.protocol.transaction.AbstractTransactionRequest;
 import io.seata.core.protocol.transaction.AbstractTransactionResponse;
+import io.seata.core.protocol.transaction.BranchDaccCommitRequest;
+import io.seata.core.protocol.transaction.BranchDaccCommitResponse;
 import io.seata.core.protocol.transaction.GlobalBeginRequest;
 import io.seata.core.protocol.transaction.GlobalBeginResponse;
 import io.seata.core.protocol.transaction.GlobalCommitRequest;
@@ -36,6 +36,7 @@ import io.seata.core.protocol.transaction.GlobalRollbackResponse;
 import io.seata.core.protocol.transaction.GlobalStatusRequest;
 import io.seata.core.protocol.transaction.GlobalStatusResponse;
 import io.seata.core.rpc.netty.TmRpcClient;
+import java.util.concurrent.TimeoutException;
 
 /**
  * The type Default transaction manager.
@@ -64,6 +65,17 @@ public class DefaultTransactionManager implements TransactionManager {
         GlobalCommitResponse response = (GlobalCommitResponse)syncCall(globalCommit);
         return response.getGlobalStatus();
     }
+
+    @Override
+    public GlobalStatus branchCommit(String xid, long branchId, boolean retrying) throws TransactionException {
+        BranchDaccCommitRequest branchDaccCommitRequest = new BranchDaccCommitRequest();
+        branchDaccCommitRequest.setXid(xid);
+        branchDaccCommitRequest.setBranchId(branchId);
+        branchDaccCommitRequest.setRetrying(retrying);
+        BranchDaccCommitResponse response = (BranchDaccCommitResponse)syncCall(branchDaccCommitRequest);
+        return response.getGlobalStatus();
+    }
+
 
     @Override
     public GlobalStatus rollback(String xid) throws TransactionException {

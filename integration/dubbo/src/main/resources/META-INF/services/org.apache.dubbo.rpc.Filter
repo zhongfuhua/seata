@@ -1,1 +1,5 @@
-io.seata.integration.dubbo.ApacheDubboTransactionPropagationFilter
+io.seata.integration.dubbo.TransactionPropagationFilter
+io.seata.integration.dubbo.TccReferenceAnnotationFilter
+io.seata.integration.dubbo.SagaReferenceAnnotationFilter
+io.seata.integration.dubbo.SagaReferenceDaccClientFilter
+io.seata.integration.dubbo.SagaReferenceDaccCallBackFilter

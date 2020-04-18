@@ -15,11 +15,11 @@
  */
 package io.seata.spring.boot.autoconfigure.properties;
 
+import static io.seata.spring.boot.autoconfigure.StarterConstants.SEATA_PREFIX;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-import static io.seata.spring.boot.autoconfigure.StarterConstants.SEATA_PREFIX;
 
 /**
  * @author xingfudeshi@gmail.com
@@ -47,6 +47,8 @@ public class SeataProperties {
      * Whether use JDK proxy instead of CGLIB proxy
      */
     private boolean useJdkProxy = false;
+	
+	 private boolean hsfInvoker = true;
 
     @Autowired
     private SpringCloudAlibabaConfiguration springCloudAlibabaConfiguration;
@@ -101,4 +103,13 @@ public class SeataProperties {
         this.useJdkProxy = useJdkProxy;
         return this;
     }
+	
+	  public boolean isHsfInvoker() {
+    return hsfInvoker;
+  }
+
+  public SeataProperties setHsfInvoker(boolean hsfInvoker) {
+    this.hsfInvoker = hsfInvoker;
+    return this;
+  }
 }

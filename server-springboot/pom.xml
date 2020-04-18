@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>seata-parent</artifactId>
+        <groupId>com.gigrt.midend</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>seata-server-springboot</artifactId>
+    <packaging>jar</packaging>
+    <name>seata-server-springboot ${project.version}</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gigrt.midend</groupId>
+            <artifactId>seata-server-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-pandora</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-alicloud-acm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>${exclude.file}</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>com.taobao.pandora</groupId>
+                <artifactId>pandora-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configurationDirectory>conf-springboot</configurationDirectory>
+                    <configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <repositoryName>lib-springboot</repositoryName>
+                    <encoding>UTF-8</encoding>
+                    <useWildcardClassPath>true</useWildcardClassPath>
+                    <binFolder>bin-springboot</binFolder>
+                    <binFileExtensions>
+                        <unix>.sh</unix>
+                        <windows>.bat</windows>
+                    </binFileExtensions>
+                    <assembleDirectory>../distribution</assembleDirectory>
+                    <programs>
+                        <program>
+                            <mainClass>io.seata.server.springboot.ServerApplication</mainClass>
+                            <name>seata-server-springboot</name>
+                            <jvmSettings>
+                                <extraArguments>
+                                    <extraArgument>-server</extraArgument>
+                                    <extraArgument>-XX:MaxDirectMemorySize=1024M</extraArgument>
+                                </extraArguments>
+                            </jvmSettings>
+                            <platforms>
+                                <platform>windows</platform>
+                                <platform>unix</platform>
+                            </platforms>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <configuration>
+                <imageName>${repo.url}/repo-midend-cmpt-dtmc:${app.version}</imageName>
+                <dockerDirectory>docker-springboot</dockerDirectory>
+                <resources>
+                    <resource>
+                        <include>*.jar</include>
+                    </resource>
+                </resources>
+            </configuration>
+        </plugin>
+        </plugins>
+    </build>
+
+
+
+</project>

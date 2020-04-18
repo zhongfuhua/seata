@@ -15,12 +15,17 @@
  */
 package io.seata.spring.boot.autoconfigure;
 
+import static io.seata.common.Constants.BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER;
+import static io.seata.spring.annotation.datasource.AutoDataSourceProxyRegistrar.BEAN_NAME_SEATA_DATA_SOURCE_BEAN_POST_PROCESSOR;
+
 import io.seata.spring.annotation.GlobalTransactionScanner;
 import io.seata.spring.annotation.datasource.SeataDataSourceBeanPostProcessor;
 import io.seata.spring.boot.autoconfigure.properties.SeataProperties;
 import io.seata.spring.boot.autoconfigure.provider.SpringApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,9 +33,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
-import static io.seata.common.Constants.BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER;
-import static io.seata.spring.annotation.datasource.AutoDataSourceProxyRegistrar.BEAN_NAME_SEATA_DATA_SOURCE_BEAN_POST_PROCESSOR;
 
 /**
  * @author xingfudeshi@gmail.com
@@ -42,6 +44,15 @@ import static io.seata.spring.annotation.datasource.AutoDataSourceProxyRegistrar
 public class SeataAutoConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeataAutoConfiguration.class);
 
+/*	@Autowired
+	private SeataProperties seataProperties;*/
+
+	@Value("${dubbo.application.name:null}")
+	private String             applicationName;
+
+	@Value("${dubbo.registry.address:null}")
+	private String             referenceAddress;
+  
     @Bean(BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER)
     @ConditionalOnMissingBean(name = {BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER})
     public SpringApplicationContextProvider springApplicationContextProvider() {
@@ -55,7 +66,11 @@ public class SeataAutoConfiguration {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Automatically configure Seata");
         }
-        return new GlobalTransactionScanner(seataProperties.getApplicationId(), seataProperties.getTxServiceGroup());
+        GlobalTransactionScanner globalTransactionScanner = new GlobalTransactionScanner(seataProperties.getApplicationId(),
+        seataProperties.getTxServiceGroup(), seataProperties.isHsfInvoker());
+	    globalTransactionScanner.setApplicationName(applicationName);
+	    globalTransactionScanner.setReferenceAddress(referenceAddress);
+	    return globalTransactionScanner;
     }
 
     @Bean(BEAN_NAME_SEATA_DATA_SOURCE_BEAN_POST_PROCESSOR)

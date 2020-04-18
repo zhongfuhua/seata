@@ -48,6 +48,12 @@ class DefaultGlobalTransactionTest {
             }
 
             @Override
+            public GlobalStatus branchCommit(String xid, long branchId, boolean retrying)
+                throws TransactionException {
+                return null;
+            }
+
+            @Override
             public GlobalStatus rollback(String xid) throws TransactionException {
                 throw new MyRuntimeException("");
             }

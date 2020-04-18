@@ -70,6 +70,15 @@ public interface TCInboundHandler {
     BranchReportResponse handle(BranchReportRequest branchReport, RpcContext rpcContext);
 
     /**
+     * Handle branch report response.
+     *
+     * @param branchReport the branch report
+     * @param rpcContext   the rpc context
+     * @return the branch report response
+     */
+    BranchDaccCommitResponse handle(BranchDaccCommitRequest branchReport, RpcContext rpcContext);
+
+    /**
      * Handle global lock query response.
      *
      * @param checkLock  the check lock

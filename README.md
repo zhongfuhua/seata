@@ -84,7 +84,7 @@ For more details about principle and design, please go to [Seata wiki page](http
 <seata.version>1.1.0</seata.version>
 
 <dependency>
-    <groupId>io.seata</groupId>
+    <groupId>com.gigrt.midend</groupId>
     <artifactId>seata-all</artifactId>
     <version>${seata.version}</version>
 </dependency>

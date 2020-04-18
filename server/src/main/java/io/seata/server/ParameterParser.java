@@ -22,14 +22,15 @@ import io.seata.common.util.NumberUtils;
 import io.seata.common.util.StringUtils;
 import io.seata.config.ConfigurationFactory;
 import io.seata.core.constants.ConfigurationKeys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.seata.config.ConfigurationFactory.ENV_PROPERTY_KEY;
 
@@ -79,6 +80,9 @@ public class ParameterParser {
      */
     public ParameterParser(String[] args) {
         this.init(args);
+        if(serverNode == SERVER_DEFAULT_NODE){
+            serverNode = getLocalIp();
+        }
     }
 
     private void init(String[] args) {
@@ -139,6 +143,17 @@ public class ParameterParser {
             }
         }
         return false;
+    }
+	
+	private int getLocalIp(){
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            String ip = inetAddress.getHostAddress();
+            return Integer.valueOf(ip.substring(ip.lastIndexOf(".") + 1));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return SERVER_DEFAULT_NODE;
     }
 
     /**

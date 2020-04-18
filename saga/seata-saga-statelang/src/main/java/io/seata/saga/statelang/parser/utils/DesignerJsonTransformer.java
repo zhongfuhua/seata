@@ -295,6 +295,6 @@ public class DesignerJsonTransformer {
                 }
             }
         }
-        return stateMachineJsonObj.toString(SerializerFeature.PrettyFormat);
+        return JSONObject.toJSONString(stateMachineJsonObj, SerializerFeature.PrettyFormat);
     }
 }

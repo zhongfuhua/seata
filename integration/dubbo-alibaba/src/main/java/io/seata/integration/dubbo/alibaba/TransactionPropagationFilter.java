@@ -13,19 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.seata.integration.dubbo;
+package io.seata.integration.dubbo.alibaba;
 
+import com.alibaba.dubbo.common.extension.Activate;
+import com.alibaba.dubbo.rpc.Filter;
+import com.alibaba.dubbo.rpc.Invocation;
+import com.alibaba.dubbo.rpc.Invoker;
+import com.alibaba.dubbo.rpc.Result;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.dubbo.rpc.RpcException;
 import io.seata.core.context.RootContext;
-import org.apache.dubbo.common.extension.Activate;
-import org.apache.dubbo.rpc.Filter;
-import org.apache.dubbo.rpc.Invocation;
-import org.apache.dubbo.rpc.Invoker;
-import org.apache.dubbo.rpc.Result;
-import org.apache.dubbo.rpc.RpcContext;
-import org.apache.dubbo.rpc.RpcException;
+import io.seata.core.constants.DubboConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.seata.core.constants.DubboConstants;
 
 /**
  * The type Transaction propagation filter.
@@ -33,31 +33,36 @@ import io.seata.core.constants.DubboConstants;
  * @author sharajava
  */
 @Activate(group = {DubboConstants.PROVIDER, DubboConstants.CONSUMER}, order = 100)
-public class ApacheDubboTransactionPropagationFilter implements Filter {
+public class TransactionPropagationFilter implements Filter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApacheDubboTransactionPropagationFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionPropagationFilter.class);
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String xid = RootContext.getXID();
+        String xidFilterType = RootContext.getXIDFilterType();
         String xidInterceptorType = RootContext.getXIDInterceptorType();
 
         String rpcXid = getRpcXid();
-        String rpcXidInterceptorType = RpcContext.getContext().getAttachment(RootContext.KEY_XID_INTERCEPTOR_TYPE);
+        String rpcXidFilterType = getRpcXidFilterType();
+        String rpcXidInterceptorType = getRpcXidInterceptorType();
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("xid in RootContext[{}] xid in RpcContext[{}]", xid, rpcXid);
         }
         boolean bind = false;
         if (xid != null) {
             RpcContext.getContext().setAttachment(RootContext.KEY_XID, xid);
+            RpcContext.getContext().setAttachment(RootContext.KEY_XID_FILTER_TYPE, xidFilterType);
             RpcContext.getContext().setAttachment(RootContext.KEY_XID_INTERCEPTOR_TYPE, xidInterceptorType);
         } else {
             if (rpcXid != null) {
                 RootContext.bind(rpcXid);
+                RootContext.bindFilterType(rpcXidFilterType);
                 RootContext.bindInterceptorType(rpcXidInterceptorType);
                 bind = true;
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("bind[{}] interceptorType[{}] to RootContext", rpcXid, rpcXidInterceptorType);
+                    LOGGER.debug("bind[{}] interceptorType[{}] filterType[{}] to RootContext", rpcXid, rpcXidInterceptorType, rpcXidFilterType);
                 }
             }
         }
@@ -65,17 +70,19 @@ public class ApacheDubboTransactionPropagationFilter implements Filter {
             return invoker.invoke(invocation);
         } finally {
             if (bind) {
-                String unbindInterceptorType = RootContext.unbindInterceptorType();
                 String unbindXid = RootContext.unbind();
+                String unbindFilterType = RootContext.unbindFilterType();
+                String unbindInterceptorType = RootContext.unbindInterceptorType();
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("unbind[{}] interceptorType[{}] from RootContext", unbindXid, unbindInterceptorType);
+                    LOGGER.debug("unbind[{}] interceptorType[{}] filterType[{}] from RootContext", unbindXid, unbindInterceptorType);
                 }
                 if (!rpcXid.equalsIgnoreCase(unbindXid)) {
-                    LOGGER.warn("xid in change during RPC from {} to {}, xidInterceptorType from {} to {} ", rpcXid, unbindXid, rpcXidInterceptorType, unbindInterceptorType);
+                    LOGGER.warn("xid in change during RPC from {} to {}, xidInterceptorType from {} to {} , xidFilterType from {} to {} ", rpcXid, unbindXid, rpcXidFilterType, unbindFilterType);
                     if (unbindXid != null) {
                         RootContext.bind(unbindXid);
+                        RootContext.bindFilterType(unbindFilterType);
                         RootContext.bindInterceptorType(unbindInterceptorType);
-                        LOGGER.warn("bind [{}] interceptorType[{}] back to RootContext", unbindXid, unbindInterceptorType);
+                        LOGGER.warn("bind [{}] interceptorType[{}] filterType[{}] back to RootContext", unbindXid, unbindInterceptorType, unbindFilterType);
                     }
                 }
             }
@@ -90,6 +97,23 @@ public class ApacheDubboTransactionPropagationFilter implements Filter {
         String rpcXid = RpcContext.getContext().getAttachment(RootContext.KEY_XID);
         if (rpcXid == null) {
             rpcXid = RpcContext.getContext().getAttachment(RootContext.KEY_XID.toLowerCase());
+        }
+        return rpcXid;
+    }
+
+
+    private String getRpcXidFilterType() {
+        String rpcXid = RpcContext.getContext().getAttachment(RootContext.KEY_XID_FILTER_TYPE);
+        if (rpcXid == null) {
+            rpcXid = RpcContext.getContext().getAttachment(RootContext.KEY_XID_FILTER_TYPE.toLowerCase());
+        }
+        return rpcXid;
+    }
+
+    private String getRpcXidInterceptorType() {
+        String rpcXid = RpcContext.getContext().getAttachment(RootContext.KEY_XID_INTERCEPTOR_TYPE);
+        if (rpcXid == null) {
+            rpcXid = RpcContext.getContext().getAttachment(RootContext.KEY_XID_INTERCEPTOR_TYPE.toLowerCase());
         }
         return rpcXid;
     }
