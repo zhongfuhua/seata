@@ -99,18 +99,18 @@
             </plugin>
 
             <plugin>
-            <groupId>com.spotify</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <configuration>
-                <imageName>${repo.url}/repo-midend-cmpt-dtmc:${app.version}</imageName>
-                <dockerDirectory>docker-springboot</dockerDirectory>
-                <resources>
-                    <resource>
-                        <include>*.jar</include>
-                    </resource>
-                </resources>
-            </configuration>
-        </plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>${repo.url}/repo-midend-cmpt-dtmc:${app.version}</imageName>
+                    <dockerDirectory>docker-springboot</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <include>*.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
