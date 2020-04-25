@@ -69,6 +69,7 @@ public abstract class AbstractCore implements Core {
     public Long branchRegister(BranchType branchType, String resourceId, String clientId, String xid,
                                String applicationData, String lockKeys) throws TransactionException {
         GlobalSession globalSession = assertGlobalSessionNotNull(xid, false);
+ 		LOGGER.info("Begin register branch xid = {} resourceId = {} applicationData = {}",  xid, resourceId, applicationData);
         return SessionHolder.lockAndExecute(globalSession, () -> {
             globalSessionStatusCheck(globalSession);
             globalSession.addSessionLifecycleListener(SessionHolder.getRootSessionManager());
@@ -79,6 +80,7 @@ public abstract class AbstractCore implements Core {
                 globalSession.addBranch(branchSession);
             } catch (RuntimeException ex) {
                 branchSessionUnlock(branchSession);
+                LOGGER.error("Failed to store branch xid = {} branchId = {}: {}", globalSession.getXid(), branchSession.getBranchId(), ex);
                 throw new BranchTransactionException(FailedToAddBranch, String
                         .format("Failed to store branch xid = %s branchId = %s", globalSession.getXid(),
                                 branchSession.getBranchId()), ex);
@@ -233,5 +235,10 @@ public abstract class AbstractCore implements Core {
     @Override
     public void doGlobalReport(GlobalSession globalSession, String xid, GlobalStatus globalStatus) throws TransactionException {
 
+    }
+
+    @Override
+    public GlobalStatus branchCommit(String xid, long branchId, boolean retrying) throws TransactionException {
+        return null;
     }
 }

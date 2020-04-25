@@ -47,8 +47,15 @@ public class DubboRemotingParser extends AbstractedRemotingParser {
             return null;
         }
         try {
+            Class<?> interfaceClass = null;
+            try {
+                interfaceClass = (Class<?>)ReflectionUtil.invokeMethod(bean, "getInterfaceClass");
+            } catch (NoSuchMethodException e) {
+            }
+            if(interfaceClass == null){
+                interfaceClass = Class.forName((String) ReflectionUtil.invokeMethod(bean, "getInterface"));
+            }
             RemotingDesc serviceBeanDesc = new RemotingDesc();
-            Class<?> interfaceClass = (Class<?>)ReflectionUtil.invokeMethod(bean, "getInterfaceClass");
             String interfaceClassName = (String)ReflectionUtil.getFieldValue(bean, "interfaceName");
             String version = (String)ReflectionUtil.invokeMethod(bean, "getVersion");
             String group = (String)ReflectionUtil.invokeMethod(bean, "getGroup");

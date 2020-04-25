@@ -70,6 +70,8 @@ public @interface GlobalTransactional {
      */
     String[] noRollbackForClassName() default {};
 
+    boolean atSwitch() default true;
+	
     /**
      * the propagation of the global transaction
      * @return

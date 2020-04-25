@@ -15,13 +15,13 @@
  */
 package io.seata.spring.util;
 
-import java.lang.reflect.Method;
-
+import io.seata.common.util.ReflectionUtil;
 import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
 import io.seata.rm.tcc.remoting.Protocols;
 import io.seata.rm.tcc.remoting.RemotingDesc;
 import io.seata.rm.tcc.remoting.RemotingParser;
 import io.seata.rm.tcc.remoting.parser.DefaultRemotingParser;
+import java.lang.reflect.Method;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -68,6 +68,28 @@ public class TCCBeanParserUtils {
                 return isTccProxyTargetBean(remotingDesc);
             }
         }
+    }
+
+    public static boolean isTccDubboProxy(Object bean, String proxyField) throws Exception {
+        try{
+            Object proxyBean = ReflectionUtil.getFieldValue(bean, proxyField);
+            io.seata.rm.tcc.remoting.RemotingDesc remotingDesc = DubboUtil.getTccServiceDesc(proxyBean);
+
+            boolean isTccClazz = false;
+            Class<?> tccInterfaceClazz = remotingDesc.getInterfaceClass();
+            Method[] methods = tccInterfaceClazz.getMethods();
+            for (Method method : methods) {
+                TwoPhaseBusinessAction twoPhaseBusinessAction = method.getAnnotation(TwoPhaseBusinessAction.class);
+                if (twoPhaseBusinessAction != null) {
+                    isTccClazz = true;
+                    break;
+                }
+            }
+            return  isTccClazz;
+        }catch (Exception e){
+            throw new Exception(e);
+        }
+
     }
 
     /**
@@ -119,6 +141,18 @@ public class TCCBeanParserUtils {
                 break;
             }
         }
+
+        if(!isTccClazz){
+            methods = remotingDesc.getTargetBean().getClass().getMethods();
+            for (Method method : methods) {
+                twoPhaseBusinessAction = method.getAnnotation(TwoPhaseBusinessAction.class);
+                if (twoPhaseBusinessAction != null) {
+                    isTccClazz = true;
+                    break;
+                }
+            }
+        }
+
         if (!isTccClazz) {
             return false;
         }

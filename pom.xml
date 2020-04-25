@@ -17,9 +17,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.seata</groupId>
+    <parent>
+        <groupId>com.gigrt.midend</groupId>
+        <artifactId>midend-component</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>seata-parent</artifactId>
     <version>${revision}</version>
     <modules>
@@ -41,11 +46,14 @@
         <module>server</module>
         <module>spring</module>
         <module>tcc</module>
+        <module>saga-annotation</module>
         <module>test</module>
         <module>tm</module>
         <module>metrics</module>
         <module>serializer</module>
         <module>seata-spring-boot-starter</module>
+        <module>seata-server-spring-boot-starter</module>
+        <module>server-springboot</module>
         <module>compressor</module>
         <module>saga</module>
         <module>sqlparser</module>
@@ -165,7 +173,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.seata</groupId>
+                <groupId>com.gigrt.midend</groupId>
                 <artifactId>seata-bom</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>
@@ -177,7 +185,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>nexus-snapshots</id>
             <build>
                 <plugins>
                     <!-- Javadoc -->
@@ -232,12 +240,12 @@
 
             <distributionManagement>
                 <snapshotRepository>
-                    <id>oss_seata</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <id>nexus-snapshots</id>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>oss_seata</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>nexus-release</id>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
                 </repository>
             </distributionManagement>
             <properties>

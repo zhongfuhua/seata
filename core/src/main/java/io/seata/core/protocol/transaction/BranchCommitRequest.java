@@ -24,7 +24,11 @@ import io.seata.core.rpc.RpcContext;
  * @author sharajava
  */
 public class BranchCommitRequest extends AbstractBranchEndRequest {
-
+    
+    private long    branchId;
+    
+    private boolean retrying;
+    
     @Override
     public short getTypeCode() {
         return MessageType.TYPE_BRANCH_COMMIT;
@@ -35,5 +39,21 @@ public class BranchCommitRequest extends AbstractBranchEndRequest {
         return handler.handle(this);
     }
 
+    @Override
+    public long getBranchId() {
+        return branchId;
+    }
 
+    @Override
+    public void setBranchId(long branchId) {
+        this.branchId = branchId;
+    }
+
+    public boolean isRetrying() {
+        return retrying;
+    }
+
+    public void setRetrying(boolean retrying) {
+        this.retrying = retrying;
+    }
 }

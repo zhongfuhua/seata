@@ -35,6 +35,8 @@ import io.seata.core.protocol.AbstractMessage;
 import io.seata.core.protocol.AbstractResultMessage;
 import io.seata.core.protocol.transaction.AbstractTransactionRequestToTC;
 import io.seata.core.protocol.transaction.AbstractTransactionResponse;
+import io.seata.core.protocol.transaction.BranchDaccCommitRequest;
+import io.seata.core.protocol.transaction.BranchDaccCommitResponse;
 import io.seata.core.protocol.transaction.BranchRegisterRequest;
 import io.seata.core.protocol.transaction.BranchRegisterResponse;
 import io.seata.core.protocol.transaction.BranchReportRequest;
@@ -148,6 +150,11 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Tran
     public DefaultCoordinator(ServerMessageSender messageSender) {
         this.messageSender = messageSender;
         this.core = new DefaultCore(messageSender);
+    }
+	
+	@Override
+    protected void doBranchCommit(BranchDaccCommitRequest request, BranchDaccCommitResponse response, RpcContext rpcContext) throws TransactionException {
+        response.setGlobalStatus(core.branchCommit(request.getXid(), request.getBranchId(), request.isRetrying()));
     }
 
     @Override

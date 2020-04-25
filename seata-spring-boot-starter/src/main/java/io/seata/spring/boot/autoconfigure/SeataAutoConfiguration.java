@@ -23,6 +23,7 @@ import io.seata.tm.api.DefaultFailureHandlerImpl;
 import io.seata.tm.api.FailureHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -45,6 +46,12 @@ import static io.seata.spring.annotation.datasource.AutoDataSourceProxyRegistrar
 public class SeataAutoConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeataAutoConfiguration.class);
 
+	@Value("${dubbo.application.name:null}")
+	private String             applicationName;
+
+	@Value("${dubbo.registry.address:null}")
+	private String             referenceAddress;
+  
     @Bean(BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER)
     @ConditionalOnMissingBean(name = {BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER})
     public SpringApplicationContextProvider springApplicationContextProvider() {
@@ -64,7 +71,11 @@ public class SeataAutoConfiguration {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Automatically configure Seata");
         }
-        return new GlobalTransactionScanner(seataProperties.getApplicationId(), seataProperties.getTxServiceGroup(), failureHandler);
+        GlobalTransactionScanner globalTransactionScanner = new GlobalTransactionScanner(seataProperties.getApplicationId(),
+        seataProperties.getTxServiceGroup(), failureHandler, seataProperties.isHsfInvoker());
+	    globalTransactionScanner.setApplicationName(applicationName);
+	    globalTransactionScanner.setReferenceAddress(referenceAddress);
+	    return globalTransactionScanner;
     }
 
     @Bean(BEAN_NAME_SEATA_AUTO_DATA_SOURCE_PROXY_CREATOR)

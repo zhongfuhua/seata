@@ -15,12 +15,6 @@
  */
 package io.seata.rm.tcc.remoting.parser;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import io.seata.common.exception.FrameworkException;
 import io.seata.common.loader.EnhancedServiceLoader;
 import io.seata.common.util.CollectionUtils;
@@ -31,6 +25,12 @@ import io.seata.rm.tcc.api.BusinessActionContext;
 import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
 import io.seata.rm.tcc.remoting.RemotingDesc;
 import io.seata.rm.tcc.remoting.RemotingParser;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * parsing remoting bean
@@ -175,8 +175,15 @@ public class DefaultRemotingParser {
                 for (Method m : methods) {
                     TwoPhaseBusinessAction twoPhaseBusinessAction = m.getAnnotation(TwoPhaseBusinessAction.class);
                     if (twoPhaseBusinessAction != null) {
+                        String actionName;
                         TCCResource tccResource = new TCCResource();
-                        tccResource.setActionName(twoPhaseBusinessAction.name());
+                        if (StringUtils.isBlank(twoPhaseBusinessAction.name())) {
+                            actionName = targetBean.getClass().getName();
+                        } else {
+                            actionName = twoPhaseBusinessAction.name();
+                        }
+
+                        tccResource.setActionName(actionName);
                         tccResource.setTargetBean(targetBean);
                         tccResource.setPrepareMethod(m);
                         tccResource.setCommitMethodName(twoPhaseBusinessAction.commitMethod());

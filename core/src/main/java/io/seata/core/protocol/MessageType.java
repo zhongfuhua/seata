@@ -103,6 +103,14 @@ public class MessageType {
      * The constant TYPE_BRANCH_STATUS_REPORT_RESULT.
      */
     public static final short TYPE_BRANCH_STATUS_REPORT_RESULT = 14;
+    /**
+     * The constant TYPE_BRANCH_REGISTER.
+     */
+    public static final short TYPE_BRANCH_DACC_COMMIT = 30;
+    /**
+     * The constant TYPE_BRANCH_REGISTER_RESULT.
+     */
+    public static final short TYPE_BRANCH_DACC_COMMIT_RESULT = 31;
 
     /**
      * The constant TYPE_SEATA_MERGE.

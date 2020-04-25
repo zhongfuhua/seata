@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractExceptionHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExceptionHandler.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractExceptionHandler.class);
 
     /**
      * The constant CONFIG.

@@ -18,7 +18,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>io.seata</groupId>
+    <groupId>com.gigrt.midend</groupId>
     <artifactId>seata-bom</artifactId>
     <version>1.2.0</version>
 
@@ -496,7 +496,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>nexus-snapshots</id>
             <build>
                 <plugins>
                     <plugin>
@@ -570,12 +570,12 @@
 
             <distributionManagement>
                 <snapshotRepository>
-                    <id>oss_seata</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <id>nexus-snapshots</id>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>oss_seata</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>nexus-release</id>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
                 </repository>
             </distributionManagement>
 

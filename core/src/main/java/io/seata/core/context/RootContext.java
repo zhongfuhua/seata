@@ -41,9 +41,16 @@ public class RootContext {
      */
     public static final String KEY_XID = "TX_XID";
 
+
+    public static final String KEY_XID_FILTER_TYPE = "tx-xid-filter-type";
+
     public static final String KEY_XID_INTERCEPTOR_TYPE = "tx-xid-interceptor-type";
 
+    public static final String KEY_SAGA_TCC_FLAG = "tx-sage-tcc-flag";
+
     public static final String KEY_GLOBAL_LOCK_FLAG = "TX_LOCK";
+
+    public static final String KEY_BRANCH_ID = "TX_BRANCH_ID";
 
     private static ContextCore CONTEXT_HOLDER = ContextCoreLoader.load();
 
@@ -58,12 +65,25 @@ public class RootContext {
             return xid;
         }
 
-        String xidType = CONTEXT_HOLDER.get(KEY_XID_INTERCEPTOR_TYPE);
+ 		String xidType = CONTEXT_HOLDER.get(KEY_XID_FILTER_TYPE);
+        if (StringUtils.isNotBlank(xidType) && xidType.contains("_")) {
+            return xidType.split("_")[0];
+        }
+        xidType = CONTEXT_HOLDER.get(KEY_XID_INTERCEPTOR_TYPE);
         if (StringUtils.isNotBlank(xidType) && xidType.contains("_")) {
             return xidType.split("_")[0];
         }
 
         return null;
+    }
+
+    /**
+     * Gets xid.
+     *
+     * @return the xid
+     */
+    public static String getXIDFilterType() {
+        return CONTEXT_HOLDER.get(KEY_XID_FILTER_TYPE);
     }
 
     /**
@@ -88,6 +108,19 @@ public class RootContext {
     }
 
     /**
+     * Bind.
+     *
+     * @param xid the xid
+     */
+    public static void bindSagaTccFlag(String xid) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("bind " + xid);
+        }
+        CONTEXT_HOLDER.put(KEY_SAGA_TCC_FLAG, xid);
+    }
+
+
+    /**
      * Bind interceptor type
      *
      * @param xidType
@@ -106,6 +139,21 @@ public class RootContext {
     /**
      * Bind interceptor type
      *
+     * @param xidType
+     */
+    public static void bindFilterType(String xidType) {
+        if(StringUtils.isNotBlank(xidType)){
+            String[] xidTypes = xidType.split("_");
+            if(xidTypes.length == 2){
+                bindFilterType(xidTypes[0], BranchType.valueOf(xidTypes[1]));
+            }
+        }
+    }
+
+
+    /**
+     * Bind interceptor type
+     *
      * @param xid
      * @param branchType
      */
@@ -115,6 +163,20 @@ public class RootContext {
             LOGGER.debug("bind interceptor type xid={} branchType={}", xid, branchType);
         }
         CONTEXT_HOLDER.put(KEY_XID_INTERCEPTOR_TYPE, xidType);
+    }
+
+    /**
+     * Bind filter type
+     *
+     * @param xid
+     * @param branchType
+     */
+    public static void bindFilterType(String xid, BranchType branchType) {
+        String xidType = String.format("%s_%s", xid, branchType.name());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("bind filter type xid={} branchType={}", xid, branchType);
+        }
+        CONTEXT_HOLDER.put(KEY_XID_FILTER_TYPE, xidType);
     }
 
     /**
@@ -143,6 +205,33 @@ public class RootContext {
         return xid;
     }
 
+
+    /**
+     * Unbind string.
+     *
+     * @return the string
+     */
+    public static String unbindSagaTccFlag() {
+        String xid = CONTEXT_HOLDER.remove(KEY_SAGA_TCC_FLAG);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("unbind SAGA_TCC_FLAG {} ", xid);
+        }
+        return xid;
+    }
+
+    /**
+     * Unbind temporary string
+     *
+     * @return the string
+     */
+    public static String unbindFilterType() {
+        String xidType = CONTEXT_HOLDER.remove(KEY_XID_FILTER_TYPE);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("unbind filter type {}", xidType);
+        }
+        return xidType;
+    }
+
     /**
      * Unbind temporary string
      *
@@ -169,6 +258,15 @@ public class RootContext {
      * @return the boolean
      */
     public static boolean inGlobalTransaction() {
+        return CONTEXT_HOLDER.get(KEY_XID) != null && CONTEXT_HOLDER.get(KEY_SAGA_TCC_FLAG) == null;
+    }
+
+    /**
+     * In global transaction boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean inGlobalTransactionSagaTcc() {
         return CONTEXT_HOLDER.get(KEY_XID) != null;
     }
 

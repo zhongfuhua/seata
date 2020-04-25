@@ -73,6 +73,7 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
     private String applicationData;
 
     private volatile boolean active = true;
+   	private boolean dacc;
 
     private final ArrayList<BranchSession> branchSessions = new ArrayList<>();
 
@@ -108,7 +109,7 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
      */
     public boolean canBeCommittedAsync() {
         for (BranchSession branchSession : branchSessions) {
-            if (branchSession.getBranchType() == BranchType.TCC || branchSession.getBranchType() == BranchType.XA) {
+            if (branchSession.getBranchType() == BranchType.TCC || branchSession.getBranchType() == BranchType.XA || branchSession.getBranchType() == BranchType.SAGA_ANNOTATION) {
                 return false;
             }
         }
@@ -240,6 +241,10 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
         for (SessionLifecycleListener lifecycleListener : lifecycleListeners) {
             lifecycleListener.onAddBranch(this, branchSession);
         }
+
+        if(branchSession.getResourceId().startsWith("DACC:")){
+            setDacc(true);
+        }
         branchSession.setStatus(BranchStatus.Registered);
         add(branchSession);
     }
@@ -314,6 +319,15 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
         this.transactionName = transactionName;
         this.timeout = timeout;
         this.xid = XID.generateXID(transactionId);
+    }
+
+
+    public boolean isDacc() {
+        return dacc;
+    }
+
+    public void setDacc(boolean dacc) {
+        this.dacc = dacc;
     }
 
     /**
@@ -597,6 +611,28 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
      */
     public boolean hasBranch() {
         return branchSessions.size() > 0;
+    }
+
+    public boolean hasCommitDoneAndCleanBranch() throws TransactionException {
+        if(!dacc){
+            return true;
+        }
+
+        boolean done = true;
+        ArrayList<BranchSession> branchSessions = getSortedBranches();
+        for(BranchSession branchSession : branchSessions){
+            if(BranchStatus.PhaseTwo_Committed != branchSession.getStatus()){
+                done = false;
+                break;
+            }
+        }
+
+        if(done){
+            for(BranchSession branchSession : branchSessions){
+                removeBranch(branchSession);
+            }
+        }
+        return done;
     }
 
     public void lock() throws TransactionException {

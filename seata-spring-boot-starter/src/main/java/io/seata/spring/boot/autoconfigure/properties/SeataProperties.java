@@ -47,6 +47,9 @@ public class SeataProperties {
      * Whether use JDK proxy instead of CGLIB proxy
      */
     private boolean useJdkProxy = false;
+	
+	private boolean hsfInvoker = true;
+		
     /**
      * Specifies which datasource bean are not eligible for auto-proxying
      */
@@ -105,6 +108,15 @@ public class SeataProperties {
         this.useJdkProxy = useJdkProxy;
         return this;
     }
+	
+	public boolean isHsfInvoker() {
+    	return hsfInvoker;
+	}
+
+  	public SeataProperties setHsfInvoker(boolean hsfInvoker) {
+    	this.hsfInvoker = hsfInvoker;
+    	return this;
+	}
 
     public String[] getExcludesForAutoProxying() {
         return excludesForAutoProxying;
