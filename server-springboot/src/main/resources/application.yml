@@ -1,0 +1,5 @@
+seata:
+  store:
+    db-url: jdbc:mysql://rm-wz9hs2yy95dgy9723oo.mysql.rds.aliyuncs.com:3306/rwsdb_dev_component?useUnicode=true&characterEncoding=utf-8
+    db-user: rwsdb_dev_comp
+    db-password: 6Zbzq9nTHgzMv0BxkXcABIefi21CWtO+MQJrBlelbOg=
