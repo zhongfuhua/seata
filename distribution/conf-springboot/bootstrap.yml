@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: midend-cmpt-dtmc
+
+seata:
+  store:
+    mode: db
