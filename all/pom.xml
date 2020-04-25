@@ -21,7 +21,7 @@
 
     <groupId>com.gigrt.midend</groupId>
     <artifactId>seata-all</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.0-SNAPSHOT</version>
 
     <name>Seata All-in-one ${project.version}</name>
     <url>http://seata.io</url>
@@ -727,7 +727,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>snapshot</id>
             <build>
                 <plugins>
                     <plugin>

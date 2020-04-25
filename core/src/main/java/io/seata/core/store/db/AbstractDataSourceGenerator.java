@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import io.seata.common.exception.StoreException;
+import io.seata.common.util.AesDecrypt;
 import io.seata.common.util.StringUtils;
 import io.seata.config.Configuration;
 import io.seata.config.ConfigurationFactory;
@@ -166,15 +167,20 @@ public abstract class AbstractDataSourceGenerator implements DataSourceGenerator
         return user;
     }
 
-    /**
-     * Get password string.
-     *
-     * @return the string
-     */
-    protected String getPassword() {
-        String password = CONFIG.getConfig(ConfigurationKeys.STORE_DB_PASSWORD);
-        return password;
+  /**
+   * Get password string.
+   *
+   * @return the string
+   */
+  protected String getPassword() {
+    String password = CONFIG.getConfig(ConfigurationKeys.STORE_DB_PASSWORD);
+    try {
+      password = AesDecrypt.aesDecrypt(password);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return password;
+  }
 
     /**
      * Get min conn int.

@@ -96,7 +96,7 @@
 
     <properties>
         <!-- seata version -->
-        <revision>1.2.0</revision>
+        <revision>1.2.0-SNAPSHOT</revision>
 
         <!-- Compiler settings properties -->
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -185,7 +185,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>snapshot</id>
             <build>
                 <plugins>
                     <!-- Javadoc -->

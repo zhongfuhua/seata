@@ -19,6 +19,8 @@ import io.seata.core.context.RootContext;
 import io.seata.core.model.BranchType;
 import io.seata.rm.saga.api.SagaCompensiable;
 import io.seata.rm.saga.interceptor.ActionInterceptorHandler;
+import java.lang.reflect.Method;
+import java.util.Map;
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Filter;
@@ -30,9 +32,6 @@ import org.apache.dubbo.rpc.RpcInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Method;
-import java.util.Map;
 
 @Activate(group = {Constants.CONSUMER}, order = 95)
 public class SagaReferenceAnnotationFilter implements Filter {
