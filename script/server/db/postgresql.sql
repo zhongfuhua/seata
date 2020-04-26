@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS public.branch_table
     transaction_id    BIGINT,
     resource_group_id VARCHAR(32),
     resource_id       VARCHAR(256),
-    branch_type       VARCHAR(8),
+    branch_type       VARCHAR(20),
     status            SMALLINT,
     client_id         VARCHAR(64),
     application_data  VARCHAR(2000),

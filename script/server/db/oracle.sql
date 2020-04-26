@@ -27,7 +27,7 @@ CREATE TABLE branch_table
     transaction_id    NUMBER(19),
     resource_group_id VARCHAR2(32),
     resource_id       VARCHAR2(256),
-    branch_type       VARCHAR2(8),
+    branch_type       VARCHAR2(20),
     status            NUMBER(3),
     client_id         VARCHAR2(64),
     application_data  VARCHAR2(2000),
