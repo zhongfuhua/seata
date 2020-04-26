@@ -245,7 +245,7 @@
                 </snapshotRepository>
                 <repository>
                     <id>nexus-release</id>
-                    <url>https://collaborate.gigrt.com/nexus/repository/maven-snapshots/</url>
+                    <url>https://collaborate.gigrt.com/nexus/repository/maven-releases/</url>
                 </repository>
             </distributionManagement>
             <properties>
@@ -511,7 +511,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>[3.6.0,)</version>
+                                    <version>[3.5.0,)</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
