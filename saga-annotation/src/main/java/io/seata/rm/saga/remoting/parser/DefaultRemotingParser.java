@@ -200,7 +200,7 @@ public class DefaultRemotingParser {
                         if(DaccUtils.isDaccCallback(remotingBeanDesc.getInterfaceClassName(), m.getName())){
                             sagaCompensiable = targetBean.getClass().getMethod(m.getName(), m.getParameterTypes()).getAnnotation(SagaCompensiable.class);
                             if(sagaCompensiable != null){
-                                sagaResource.setActionName(String.format("DACC:%s", sagaCompensiable.name()));
+                                sagaResource.setActionName(String.format("%s%s", DaccUtils.DACC_BRANCH, sagaCompensiable.name()));
                                 sagaResource.setRollbackRpcVersion(sagaCompensiable.rollbackRpcVersion());
                                 sagaResource.setRollbackRpcClass(sagaCompensiable.rollbackRpcClass());
                                 sagaResource.setRollbackMethodName(sagaCompensiable.rollbackMethod());

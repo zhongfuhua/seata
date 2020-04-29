@@ -104,11 +104,11 @@ public class MessageType {
      */
     public static final short TYPE_BRANCH_STATUS_REPORT_RESULT = 14;
     /**
-     * The constant TYPE_BRANCH_REGISTER.
+     * The constant TYPE_BRANCH_DACC_COMMIT.
      */
     public static final short TYPE_BRANCH_DACC_COMMIT = 30;
     /**
-     * The constant TYPE_BRANCH_REGISTER_RESULT.
+     * The constant TYPE_BRANCH_DACC_COMMIT_RESULT.
      */
     public static final short TYPE_BRANCH_DACC_COMMIT_RESULT = 31;
 

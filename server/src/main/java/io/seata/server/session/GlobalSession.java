@@ -15,17 +15,9 @@
  */
 package io.seata.server.session;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import io.seata.common.Constants;
 import io.seata.common.XID;
+import io.seata.common.util.DaccUtils;
 import io.seata.common.util.StringUtils;
 import io.seata.core.exception.GlobalTransactionException;
 import io.seata.core.exception.TransactionException;
@@ -37,6 +29,14 @@ import io.seata.server.UUIDGenerator;
 import io.seata.server.lock.LockerManagerFactory;
 import io.seata.server.store.SessionStorable;
 import io.seata.server.store.StoreConfig;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +73,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
     private String applicationData;
 
     private volatile boolean active = true;
-   	private boolean dacc;
 
     private final ArrayList<BranchSession> branchSessions = new ArrayList<>();
 
@@ -242,9 +241,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
             lifecycleListener.onAddBranch(this, branchSession);
         }
 
-        if(branchSession.getResourceId().startsWith("DACC:")){
-            setDacc(true);
-        }
         branchSession.setStatus(BranchStatus.Registered);
         add(branchSession);
     }
@@ -323,11 +319,12 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
 
 
     public boolean isDacc() {
-        return dacc;
-    }
-
-    public void setDacc(boolean dacc) {
-        this.dacc = dacc;
+        for (BranchSession branchSession : branchSessions) {
+            if(DaccUtils.isDaccBranch(branchSession.getResourceId())){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -614,7 +611,7 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
     }
 
     public boolean hasCommitDoneAndCleanBranch() throws TransactionException {
-        if(!dacc){
+        if(!isDacc()){
             return true;
         }
 

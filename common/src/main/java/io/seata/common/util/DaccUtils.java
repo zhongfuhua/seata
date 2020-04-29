@@ -25,13 +25,15 @@ package io.seata.common.util;
  */
 public class DaccUtils {
 
-    private static final String DACC_CLIENT_CLASS  = "com.gigrt.cxm.component.dacc.intf.IDaccClient";
+    public static final String DACC_CLIENT_CLASS  = "com.gigrt.cxm.component.dacc.intf.IDaccClient";
 
-    private static final String DACC_CLIENT_METHOD  = "invoke";
+    public static final String DACC_CLIENT_METHOD  = "invoke";
 
-    private static final String DACC_CALLBACK_CLASS  = "com.gigrt.cxm.component.dacc.intf.ICallbackService";
-    
-    private static final String DACC_CALLBACK_METHOD = "callback";
+    public static final String DACC_CALLBACK_CLASS  = "com.gigrt.cxm.component.dacc.intf.ICallbackService";
+
+    public static final String DACC_CALLBACK_METHOD = "callback";
+
+    public static final String DACC_BRANCH = "DACC:";
     
     public static boolean isDaccCallback(String serviceInterface, String methodName) throws NoSuchMethodException, ClassNotFoundException {
         if (DACC_CALLBACK_METHOD.equals(methodName)) {
@@ -60,5 +62,12 @@ public class DaccUtils {
 
     public static  boolean isDaccClient(String serviceInterface) throws NoSuchMethodException {
         return DACC_CLIENT_CLASS.equals(serviceInterface);
+    }
+
+    public static boolean isDaccBranch(String resourceId){
+        if(resourceId.startsWith(DACC_BRANCH)){
+            return true;
+        }
+        return false;
     }
 }

@@ -18,14 +18,12 @@ package io.seata.core.protocol.transaction;
 import io.seata.core.model.GlobalStatus;
 import io.seata.core.protocol.MessageType;
 
-import java.io.Serializable;
-
 /**
  * The type Branch register response.
  *
  * @author jimin.jm @alibaba-inc.com
  */
-public class BranchDaccCommitResponse extends AbstractTransactionResponse implements Serializable {
+public class BranchDaccCommitResponse extends AbstractTransactionResponse {
 
     /**
      * The Global status.

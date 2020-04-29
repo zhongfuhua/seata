@@ -20,6 +20,7 @@ import com.gigrt.cxm.component.dacc.intf.model.DaccReq;
 import io.seata.common.Constants;
 import io.seata.common.exception.FrameworkException;
 import io.seata.common.executor.Callback;
+import io.seata.common.util.DaccUtils;
 import io.seata.common.util.NetUtil;
 import io.seata.common.util.StringUtils;
 import io.seata.core.model.BranchType;
@@ -115,7 +116,7 @@ public class ActionInterceptorHandler {
             throw  new Exception("the dacc client invoke method params is illegal.");
         }
         DaccReq daccReq = (DaccReq) daccParams;
-        String actionName = String.format("DACC:%s:%s", daccReq.getCallServiceName(), daccReq.getCallServiceVersion());
+        String actionName = String.format("%s%s:%s", DaccUtils.DACC_BRANCH, daccReq.getCallServiceName(), daccReq.getCallServiceVersion());
         BusinessActionContext actionContext = new BusinessActionContext();
         actionContext.setXid(xid);
         actionContext.setActionName(actionName);

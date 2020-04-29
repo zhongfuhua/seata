@@ -15,6 +15,7 @@
  */
 package io.seata.server.coordinator;
 
+import io.seata.common.util.DaccUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -218,8 +219,8 @@ public class DefaultCore implements Core {
 
 	            if(branchSession.getBranchType() == BranchType.SAGA_ANNOTATION){
 	                if(globalSession.isDacc()){
-	                    if(!branchSession.getResourceId().startsWith("DACC:")){
-	                        branchSession.setStatus(BranchStatus.PhaseTwo_Committed);
+	                    if(!DaccUtils.isDaccBranch(branchSession.getResourceId())){
+                            globalSession.changeBranchStatus(branchSession, BranchStatus.PhaseTwo_Committed);
 	                    }
 	                    continue;
 	                }
